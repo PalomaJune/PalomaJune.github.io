@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Paloma June" />
+    
+    <link rel="shortcut icon" type="image/x-icon" href="../../img/favicon.ico">
+    <title>Project2</title>
+    <meta name="generator" content="Hugo 0.83.1" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../../css/main.css" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,200bold,400old" />
+    
+    <!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+    
+  </head>
+
+  <body>
+    <div id="wrap">
+      
+      <nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="../../"><i class="fa fa-home"></i></a>
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="navbar-collapse collapse" id="navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+        <li><a href="../../post/">BLOG</a></li>
+        
+        <li><a href="../../projects/">PROJECTS</a></li>
+        
+        <li><a href="../../resume/">RESUME</a></li>
+        
+      
+      </ul>
+    </div>
+  </div>
+</nav>
+
+      <div class="container">
+        <div class="blog-post">
+          <h3>
+            <strong><a href="../../project/project2/">Project2</a></strong>
+          </h3>
+        </div>
+ 
+<div class="blog-title">
+          <h4>
+         January 1, 0001 
+            &nbsp;&nbsp;
+            
+          </h4>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="blogpost">
+              
+
+
+<p><font size="5"><em>Introduction</em></font></p>
+<p><span class="math inline">\(~\)</span></p>
+<pre class="r"><code>#install.packages(&quot;Epi&quot;)
+library(Epi)
+data(births)
+library(tidyverse)</code></pre>
+<p><span class="math inline">\(~\)</span></p>
+<p>This data set contains data from 500 singleton births in a London Hospital. It has 8 variables: id, an identification variable for the mother and child; bweight, the birthweight of the child; lowbw, which tracks low birth weight with a value of 1 for babies born below 2500 g and 0 for babies born above; gestwks which which is the gestation period; preterm, which designates whether or not the baby was preterm; matage, the age of the mother; hyp, whether or not the mother had hypertension; and sex 1 for male, 2 for female.</p>
+<p><span class="math inline">\(~\)</span></p>
+<p><font size="5"><em>MANOVA</em></font></p>
+<pre class="r"><code>man &lt;- manova(cbind(bweight, gestwks, matage) ~ preterm, data = births)
+summary(man)</code></pre>
+<pre><code>## Df Pillai approx F num Df den Df Pr(&gt;F)
+## preterm 1 0.5763 220.35 3 486 &lt; 2.2e-16 ***
+## Residuals 488
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1</code></pre>
+<pre class="r"><code>summary(aov(man))</code></pre>
+<pre><code>## Response bweight :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## preterm 1 67907586 67907586 250.3 &lt; 2.2e-16 ***
+## Residuals 488 132394957 271301
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1
+##
+## Response gestwks :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## preterm 1 1499.2 1499.16 653.43 &lt; 2.2e-16 ***
+## Residuals 488 1119.6 2.29
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1
+##
+## Response matage :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## preterm 1 1.7 1.6787 0.1102 0.7401
+## Residuals 488 7434.7 15.2351
+##
+## 10 observations deleted due to missingness</code></pre>
+<pre class="r"><code>pairwise.t.test(births$bweight, births$preterm, p.adj = &quot;none&quot;)</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  births$bweight and births$preterm 
+## 
+##   0     
+## 1 &lt;2e-16
+## 
+## P value adjustment method: none</code></pre>
+<pre class="r"><code>pairwise.t.test(births$gestwks, births$preterm, p.adj = &quot;none&quot;)</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  births$gestwks and births$preterm 
+## 
+##   0     
+## 1 &lt;2e-16
+## 
+## P value adjustment method: none</code></pre>
+<pre class="r"><code>pairwise.t.test(births$matage, births$preterm, p.adj = &quot;none&quot;)</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  births$matage and births$preterm 
+## 
+##   0   
+## 1 0.74
+## 
+## P value adjustment method: none</code></pre>
+<p>The MANOVA had a p-value of 2.2e-16. For each test, the chance of making a Type I error is 0.05, so in order to keep the overall Type I error rate, a Bonferroni correction must be made, dividing the usual alpha of .05 by the number of tests performed(9), which would make it 0.0056. The MANOVA was significant, so preterm births varies significantly by at least one of the variables. According to the ANOVA and pairwise tests, there was a significant difference in preterm births by birth weight and gestational weeks, but not maternal age. MANOVA has a lot of assumptions, such as random samples and independent observations, which I cannot really speak on because I was not involved in the collection of this data, that there is multivariate normality of dependent/response variables, that there is homogeneity of within-group covariance matrices, a linear relationship among dependent/response variables, that there are no extreme outliers, and that the dependent/response variables are not too related. It is unlikely this data meets the assumptions required for the MANOVA testing as there are so many assumptions.</p>
+<p><span class="math inline">\(~\)</span></p>
+<p><font size="5"><em>Randomization</em></font></p>
+<pre class="r"><code>set.seed(348)
+premie &lt;- births %&gt;% na.omit() %&gt;% filter(preterm == 1)
+ontime &lt;- births %&gt;% na.omit() %&gt;% filter(preterm == 0)
+mead &lt;- mean(ontime$bweight) - mean(premie$bweight)
+
+mead</code></pre>
+<pre><code>## [1] 1112.175</code></pre>
+<pre class="r"><code>diffs&lt;-vector()
+dat &lt;- births %&gt;% na.omit() %&gt;% select(bweight, preterm)
+
+for(i in 1:5000){
+temp &lt;- dat %&gt;% mutate(preterm = sample(dat$preterm))
+diffs[i] &lt;- temp %&gt;% summarize(mean(bweight[preterm == 0]) - mean(bweight[preterm == 1])) %&gt;% pull
+}
+#quantile(diffs, probs = c(.025, 0.975))
+
+mean(diffs &gt; mead) #pvalue for original bweight</code></pre>
+<pre><code>## [1] 0</code></pre>
+<p>The null hypothesis is that being preterm had no effect on the birth weight of a baby, and the alternative hypothesis is that being preterm had an effect on the birth weight of the baby. The p-value is 0, which is very small and well below the threshold of 0.05, so we can reject the null hypothesis. this indicates that there is in fact a mean difference in birth weight for preterm and full term babies.</p>
+<pre class="r"><code>diffs &lt;- data_frame(diffs)
+diffs %&gt;% ggplot(aes(x=diffs)) + geom_histogram() + geom_vline(xintercept = mead, color = &quot;red&quot;) + labs(x = &quot;mean differences&quot;, title = &quot;Random Mean Differences&quot;)</code></pre>
+<p><img src="../../project/project2_files/figure-html/unnamed-chunk-4-1.png" width="768" style="display: block; margin: auto;" />
+From this graph we can see the random mean differences are very different from the true mean difference (shown in red).</p>
+<p><span class="math inline">\(~\)</span></p>
+<p><font size="5"><em>Linear Regression</em></font></p>
+<pre class="r"><code>library(lmtest)
+birthdat &lt;- births %&gt;% mutate(c_matage = matage - mean(matage, na.rm=T), c_bweight = bweight - mean(bweight, na.rm=T), c_gestwks = gestwks - mean(gestwks, na.rm=T))
+fit &lt;- lm(c_gestwks~c_bweight*sex, data=birthdat)
+summary(fit)</code></pre>
+<pre><code>##
+## Call:
+## lm(formula = c_gestwks ~ c_bweight * sex, data =
+birthdat)
+##
+## Residuals:
+## Min 1Q Median 3Q Max
+## -7.1782 -1.0038 0.1673 1.0224 4.8593
+##
+## Coefficients:
+## Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept) -0.6548427 0.2261550 -2.896 0.003955 **
+## c_bweight 0.0012046 0.0003530 3.413 0.000697 ***
+## sex 0.4745840 0.1450877 3.271 0.001148 **
+## c_bweight:sex 0.0009701 0.0002270 4.273 2.32e-05 ***
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1
+##
+## Residual standard error: 1.584 on 486 degrees of freedom
+## (10 observations deleted due to missingness)
+## Multiple R-squared: 0.5346, Adjusted R-squared: 0.5317
+## F-statistic: 186.1 on 3 and 486 DF, p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>exp(coeftest(fit))</code></pre>
+<pre><code>## 
+## t test of coefficients:
+## 
+##               Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)    0.51952    1.25377  0.0553    1.004
+## c_bweight      1.00121    1.00035 30.3471    1.001
+## sex            1.60735    1.15614 26.3380    1.001
+## c_bweight:sex  1.00097    1.00023 71.7668    1.000</code></pre>
+<p>The intercept is -0.65. This means that for a male baby born at an average birth weight, he is likely to be c_gestwks is likely -0.65, or he is born 0.65 weeks earlier than average. For a male baby, c_gestwks increases by 1.00 for each gram increase in birth weight. For a baby of average weight, they are likely to be born 1.61 weeks later than average if they a girl. For a female baby, they are likely to be born 1.00 week later for each gram increase in weight. Since the R^2 is 0.53, 0.53 of the variation is explained by this model.</p>
+<p><span class="math inline">\(~\)</span></p>
+<pre class="r"><code>birthdat &lt;- birthdat %&gt;% mutate(Sex = ifelse(sex == 1, &quot;Male&quot;, &quot;Female&quot;))
+doop &lt;- birthdat %&gt;% na.omit() %&gt;% ggplot(aes(c_bweight, c_gestwks)) + geom_point(aes(color = Sex)) + geom_smooth(method = &#39;lm&#39;,se=F, color = &quot;dark red&quot;) + labs(x = &quot;Centered Birth Weight (grams)&quot;, y = &quot;Centered Gestation (weeks)&quot;, title = &quot;Gestation by Birth Weight and Sex&quot;)
+doop</code></pre>
+<p><img src="../../project/project2_files/figure-html/unnamed-chunk-6-1.png" width="768" style="display: block; margin: auto;" />
+Based off this graph, we can see that this model does not meet the assumptions of linearity as both birth weight and gestation weeks have far more low values than they do high values (possibly due to natural limits on both weight and gestation and potentially due to practices such as induction). The data looks pretty linear based of this graph.</p>
+<pre class="r"><code>bptest(fit)</code></pre>
+<pre><code>## 
+##  studentized Breusch-Pagan test
+## 
+## data:  fit
+## BP = 67.039, df = 3, p-value = 1.837e-14</code></pre>
+<p>Since the p-value of the Breusch-Pagan test is less than 0.05, we can reject the null hypothesis that this data is homoskedastic, and say that it is heteroskedastic.</p>
+<p><span class="math inline">\(~\)</span></p>
+<pre class="r"><code>library(sandwich)
+coeftest(fit,vcov=vcovHC(fit))</code></pre>
+<pre><code>##
+## t test of coefficients:
+##
+## Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept) -0.65484274 0.24730602 -2.6479 0.008362 **
+## c_bweight 0.00120462 0.00061253 1.9666 0.049795 *
+## sex 0.47458399 0.15101586 3.1426 0.001777 **
+## c_bweight:sex 0.00097014 0.00040013 2.4246 0.015690 *
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1</code></pre>
+<p>Using the robust standard errors, birth weight (p-value = 0.0498), sex (p-value = 0.0018), and the interaction of birth weight and sex (p-value = 0.0157) all have a significant effect on the gestation period. There was no significant change in the coefficient using the robust SEs.</p>
+<p><span class="math inline">\(~\)</span></p>
+<p><font size="5"><em>Linear Regression with Bootstrapping</em></font></p>
+<pre class="r"><code>boot_dat&lt;- sample_frac(birthdat, replace=T)
+# repeat 5000 times
+set.seed(348)
+samp_distn&lt;-replicate(5000, {
+  boot_dat &lt;- sample_frac(birthdat, replace=T) #take bootstrap sample of rows
+  fit &lt;- lm(c_gestwks~c_bweight*sex, data=boot_dat) #fit model on bootstrap sample
+  coef(fit) #save coefs
+})
+## Estimated SEs
+samp_distn %&gt;% t %&gt;% as.data.frame %&gt;% summarize_all(sd)</code></pre>
+<pre><code>##   (Intercept)    c_bweight       sex c_bweight:sex
+## 1   0.2413312 0.0005895426 0.1467756     0.0003876</code></pre>
+<p>The bootstrapped standard errors were slightly lower than the robust standard errors, at 0.2398, 0.0006, 0.1477, and 0.0004 instead of 0.2473, 0.0061, 0.1510, and 0.0004, respectively. Lowering the standard error would lower the p-value, making it more significant.</p>
+<p><span class="math inline">\(~\)</span></p>
+<p><font size="5"><em>Predicting a Binary Variable (from two other variables)</em></font></p>
+<pre class="r"><code>fitprem &lt;- glm(preterm ~ lowbw * hyp, data = births, family = &quot;binomial&quot;)
+summary(fitprem)</code></pre>
+<pre><code>##
+## Call:
+## glm(formula = preterm ~ lowbw * hyp, family =
+&quot;binomial&quot;, data = births)
+##
+## Deviance Residuals:
+## Min 1Q Median 3Q Max
+## -1.6340 -0.3293 -0.3293 -0.3293 2.4256
+##
+## Coefficients:
+## Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept) -2.88759 0.22974 -12.569 &lt;2e-16 ***
+## lowbw 3.29306 0.39617 8.312 &lt;2e-16 ***
+## hyp 0.64688 0.52351 1.236 0.217
+## lowbw:hyp -0.02273 0.80601 -0.028 0.978
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1
+##
+## (Dispersion parameter for binomial family taken to be 1)
+##
+## Null deviance: 375.99 on 489 degrees of freedom
+## Residual deviance: 265.26 on 486 degrees of freedom
+## (10 observations deleted due to missingness)
+## AIC: 273.26
+##
+## Number of Fisher Scoring iterations: 5</code></pre>
+<p>This model attempts to predict whether or not the baby was preterm based on whether they had low birth weight and if the mother had hypertension.</p>
+<pre class="r"><code>exp(-2.88759)</code></pre>
+<pre><code>## [1] 0.05571031</code></pre>
+<pre class="r"><code>exp(3.29306)</code></pre>
+<pre><code>## [1] 26.92513</code></pre>
+<pre class="r"><code>exp(0.64688)</code></pre>
+<pre><code>## [1] 1.909574</code></pre>
+<pre class="r"><code>exp(-0.02273)</code></pre>
+<pre><code>## [1] 0.9775264</code></pre>
+<p>Having a low birth weight increased the odds that the baby was born preterm by 26.93, and being born to a mother with hypertension by 1.98. Having both a low birth weight and being born to a mother with hypertension put the odds at 0.978 compared to a baby with normal weight and a non-hypertensive mother. Low birth weight was a significant predictor, but a mother with hypertension was not a significant predictor, and neither was having both low birth weight and a hypertensive mother.</p>
+<p><span class="math inline">\(~\)</span></p>
+<pre class="r"><code>prob &lt;- predict(fitprem, type = &quot;response&quot;) %&gt;% na.omit()
+birt &lt;- births %&gt;% na.omit()
+table(predict=as.numeric(prob&gt;.5),truth=birt$preterm)%&gt;%addmargins</code></pre>
+<pre><code>##        truth
+## predict   0   1 Sum
+##     0   406  25 431
+##     1    21  38  59
+##     Sum 427  63 490</code></pre>
+<p>Here is the confusion matrix</p>
+<pre class="r"><code>class_diag&lt;-function(probs,truth){
+
+tab&lt;-table(factor(probs&gt;.5,levels=c(&quot;FALSE&quot;,&quot;TRUE&quot;)),truth)
+acc=sum(diag(tab))/sum(tab)
+sens=tab[2,2]/colSums(tab)[2]
+spec=tab[1,1]/colSums(tab)[1]
+ppv=tab[2,2]/rowSums(tab)[2]
+
+if(is.numeric(truth)==FALSE &amp; is.logical(truth)==FALSE) truth&lt;-as.numeric(truth)-1
+
+#CALCULATE EXACT AUC
+ord&lt;-order(probs, decreasing=TRUE)
+probs &lt;- probs[ord]; truth &lt;- truth[ord]
+
+TPR=cumsum(truth)/max(1,sum(truth)) 
+FPR=cumsum(!truth)/max(1,sum(!truth))
+
+dup&lt;-c(probs[-1]&gt;=probs[-length(probs)], FALSE)
+TPR&lt;-c(0,TPR[!dup],1); FPR&lt;-c(0,FPR[!dup],1)
+
+n &lt;- length(TPR)
+auc&lt;- sum( ((TPR[-1]+TPR[-n])/2) * (FPR[-1]-FPR[-n]) )
+
+data.frame(acc,sens,spec,ppv,auc)
+}
+
+class_diag(prob, birt$preterm)</code></pre>
+<pre><code>##         acc      sens      spec       ppv       auc
+## 1 0.9061224 0.6031746 0.9508197 0.6440678 0.7948218</code></pre>
+<p>The accyracy of this model is 0.906, which is pretty good. The sensitivity is 0.603, which means that a fair few true positives get missed, but the specificity is 0.951, which is pretty good. The precision is 0.644, which is not great, and the AUC is 0.795 which is fair.</p>
+<pre class="r"><code>birt$logit&lt;-predict(fitprem, type=&quot;link&quot;)
+
+birt %&gt;% mutate(preterm = as.factor(preterm)) %&gt;% ggplot() + geom_density(aes(logit, color = preterm, fill = preterm), alpha = .4) +
+  theme(legend.position = c(.85,.85)) + geom_vline(xintercept = 0) + xlab(&quot;logit (log-odds)&quot;) +
+  geom_rug(aes(logit, color = preterm))</code></pre>
+<p><img src="../../project/project2_files/figure-html/unnamed-chunk-14-1.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>library(plotROC)
+ROCplot&lt;- births %&gt;% na.omit() %&gt;% ggplot() + geom_roc(aes(d = preterm, m = prob), n.cuts = 0) 
+ROCplot</code></pre>
+<p><img src="../../project/project2_files/figure-html/unnamed-chunk-15-1.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>calc_auc(ROCplot)</code></pre>
+<pre><code>##   PANEL group       AUC
+## 1     1    -1 0.7948218</code></pre>
+<p>The AUC is 0.795, which is fair. This means that the model does a decent, but not great job at predicting preterm births.</p>
+<p><span class="math inline">\(~\)</span></p>
+<p><font size="5"><em>Predicting a Binary Variable (from all other variables)</em></font></p>
+<pre class="r"><code>idbirths &lt;- births %&gt;% na.omit() %&gt;% select(-id, -gestwks)
+fitid &lt;- glm(preterm~., data = idbirths, family = &quot;binomial&quot;)
+prob &lt;- predict(fitid, type = &quot;response&quot;) %&gt;% na.omit()
+class_diag(prob, idbirths$preterm)</code></pre>
+<pre><code>##         acc      sens      spec  ppv       auc
+## 1 0.9081633 0.4285714 0.9789227 0.75 0.9113416</code></pre>
+<pre class="r"><code>summary(fitid)</code></pre>
+<pre><code>##
+## Call:
+## glm(formula = preterm ~ ., family = &quot;binomial&quot;, data =
+idbirths)
+##
+## Deviance Residuals:
+## Min 1Q Median 3Q Max
+## -2.0931 -0.3826 -0.2113 -0.1017 3.0638
+##
+## Coefficients:
+## Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept) 8.3518019 2.5077608 3.330 0.000867 ***
+## bweight -0.0035152 0.0006178 -5.690 1.27e-08 ***
+## lowbw -0.3273172 0.6206224 -0.527 0.597915
+## matage 0.0074091 0.0464692 0.159 0.873321
+## hyp 0.1607692 0.4510927 0.356 0.721541
+## sex -0.3850509 0.3644640 -1.056 0.290747
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1
+##
+## (Dispersion parameter for binomial family taken to be 1)
+##
+## Null deviance: 375.99 on 489 degrees of freedom
+## Residual deviance: 215.78 on 484 degrees of freedom
+## AIC: 227.78
+##
+## Number of Fisher Scoring iterations: 6</code></pre>
+<p>I omitted gestwks because it directly correlates to preterm. The model was significant. The model had an accuracy of 0.908, which is very good, a sensitivity of 0.429 which is a little bad and means this model misses a lot of true positives, a specificity of 0.979 which is very good, a precision of 0.75 which is okay, and an AUC of 0.911 which is great.</p>
+<pre class="r"><code>set.seed(348)
+k=10
+
+# your code here
+data&lt;- idbirths %&gt;% sample_frac#randomly order rows
+folds &lt;- ntile(1:nrow(data),n=10) #create folds
+
+diags&lt;-NULL
+for(i in 1:k){
+  ## Create training and test sets
+  train&lt;-data[folds != i, ] 
+  test&lt;-data[folds == i, ]
+
+  truth&lt;-test$preterm ## Truth labels for fold i
+
+  ## Train model on training set (all but fold i)
+  fit &lt;-glm(preterm~., data = train, family = &quot;binomial&quot;)
+
+  ## Test model on test set (fold i) 
+  probs&lt;-predict(fit, newdata = test, type = &quot;response&quot;)
+
+  ## Get diagnostics for fold i
+  diags&lt;-rbind(diags, class_diag(probs, truth))
+
+}
+
+
+summarize_all(diags,mean) #average diagnostics across all k folds</code></pre>
+<pre><code>##         acc      sens      spec       ppv       auc
+## 1 0.9061224 0.4562698 0.9761263 0.7580952 0.9134367</code></pre>
+<p>This model performed very well out of sample. In fact, all of the values were about the same or higher out of sample. The accuracy was slightly lower at 0.906, the sensitivity was slightly higher at 0.456, the specificity was slightly lower at 0.976, the precision was slightly higher at 0.758, and the AUS was slightly higher at 0.913.</p>
+<pre class="r"><code>library(glmnet)
+set.seed(348)
+# your code here
+
+
+library(glmnet)
+y&lt;-as.matrix(idbirths$preterm) #grab response
+x&lt;-model.matrix(preterm~.,data=idbirths)[,-1] #grab predictors
+head(x)</code></pre>
+<pre><code>##   bweight lowbw matage hyp sex
+## 1    2974     0     34   0   2
+## 3    2620     0     35   0   2
+## 4    3751     0     31   0   1
+## 5    3200     0     33   1   1
+## 6    3673     0     33   0   2
+## 7    3628     0     29   0   2</code></pre>
+<pre class="r"><code>cv &lt;- cv.glmnet(x,y) #picks an optimal value for lambda through 10-fold CV
+
+{plot(cv$glmnet.fit, &quot;lambda&quot;, label=TRUE); abline(v = log(cv$lambda.1se)); abline(v = log(cv$lambda.min),lty=2)}</code></pre>
+<p><img src="../../project/project2_files/figure-html/unnamed-chunk-18-1.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cv&lt;-cv.glmnet(x,y,family=&quot;binomial&quot;)
+lasso&lt;-glmnet(x,y,family=&quot;binomial&quot;,lambda=cv$lambda.1se)
+coef(lasso)</code></pre>
+<pre><code>## 6 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
+##                       s0
+## (Intercept)  1.209632243
+## bweight     -0.001093144
+## lowbw        0.497196401
+## matage       .          
+## hyp          .          
+## sex          .</code></pre>
+<p>Both lowbw and bweight were retained in this model, which is not surprising seeing as they are both determined by that birtweight of the baby.</p>
+<pre class="r"><code>set.seed(348)
+k=10
+
+# your code here
+data&lt;- idbirths %&gt;% sample_frac#randomly order rows
+folds &lt;- ntile(1:nrow(data),n=10) #create folds
+
+diags&lt;-NULL
+for(i in 1:k){
+  ## Create training and test sets
+  train&lt;-data[folds != i, ] 
+  test&lt;-data[folds == i, ]
+
+  truth&lt;-test$preterm ## Truth labels for fold i
+
+  ## Train model on training set (all but fold i)
+  fit &lt;-glm(preterm~bweight+lowbw, data = train, family = &quot;binomial&quot;)
+
+  ## Test model on test set (fold i) 
+  probs&lt;-predict(fit, newdata = test, type = &quot;response&quot;)
+
+  ## Get diagnostics for fold i
+  diags&lt;-rbind(diags, class_diag(probs, truth))
+
+}
+
+
+summarize_all(diags,mean) #average diagnostics across all k folds</code></pre>
+<pre><code>##         acc      sens      spec       ppv       auc
+## 1 0.9061224 0.4562698 0.9765123 0.7530952 0.9126838</code></pre>
+<p>This model had an AUC of 0.913, which is the same as the out of the out of sample AUC in the regression above and slightly higher than the in sample AUC of that regression. The AUC is great and seems to indicate that the model does a decent job of predicting preterm births, even though both the predicting variables are based on the same pieces of data.</p>
+
+            
+        <hr>         <div class="related-posts">
+                <h5>Related Posts</h5>
+                
+              </div> 
+            </div>
+          </div>
+
+   <hr>  <div class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div> 
+        </div>
+      </div>
+    </div>
+
+    
+    <footer>
+  <div id="footer">
+    <div class="container">
+      <p class="text-muted">&copy; All rights reserved. Powered by <a href="https://gohugo.io/">Hugo</a> and
+      <a href="http://www.github.com/nurlansu/hugo-sustain/">sustain</a> with ♥</p>
+    </div>
+  </div>
+</footer>
+<div class="footer"></div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="../../js/docs.min.js"></script>
+<script src="../../js/main.js"></script>
+
+<script src="../../js/ie10-viewport-bug-workaround.js"></script>
+
+
+    
+  </body>
+</html>

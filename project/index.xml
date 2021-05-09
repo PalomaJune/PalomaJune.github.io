@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Projects on Paloma June</title>
+    <link>/project/</link>
+    <description>Recent content in Projects on Paloma June</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language><atom:link href="/project/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Project1</title>
+      <link>/project/project1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/project/project1/</guid>
+      <description>## paste this chunk into the ```{r setup} chunk at the top of your project 1 .Rmd file knitr::opts_chunk$set(echo = TRUE, eval = TRUE, fig.align = &amp;quot;center&amp;quot;, warning = F, message = F, tidy=TRUE, tidy.opts=list(width.cutoff=60), R.options=list(max.print=100)) Introduction
+\(~\)
+All three datasets used in this project provide data on all the Texas counties. CountyArea.csv provides the land, water, and total area in miles^2 for each Texas county. I chose this dataset because I have always thought the way counties in Texas were shaped and sized were quite arbitrary, and I thought it would be interesting to learn more about the size of Texas counties.</description>
+    </item>
+    
+    <item>
+      <title>Project2</title>
+      <link>/project/project2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/project/project2/</guid>
+      <description>Introduction
+\(~\)
+#install.packages(&amp;quot;Epi&amp;quot;) library(Epi) data(births) library(tidyverse) \(~\)
+This data set contains data from 500 singleton births in a London Hospital. It has 8 variables: id, an identification variable for the mother and child; bweight, the birthweight of the child; lowbw, which tracks low birth weight with a value of 1 for babies born below 2500 g and 0 for babies born above; gestwks which which is the gestation period; preterm, which designates whether or not the baby was preterm; matage, the age of the mother; hyp, whether or not the mother had hypertension; and sex 1 for male, 2 for female.</description>
+    </item>
+    
+  </channel>
+</rss>

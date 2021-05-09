@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Paloma June" />
+    
+    <link rel="shortcut icon" type="image/x-icon" href="../../img/favicon.ico">
+    <title>Project1</title>
+    <meta name="generator" content="Hugo 0.83.1" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../../css/main.css" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,200bold,400old" />
+    
+    <!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+    
+  </head>
+
+  <body>
+    <div id="wrap">
+      
+      <nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="../../"><i class="fa fa-home"></i></a>
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="navbar-collapse collapse" id="navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+        <li><a href="../../post/">BLOG</a></li>
+        
+        <li><a href="../../projects/">PROJECTS</a></li>
+        
+        <li><a href="../../resume/">RESUME</a></li>
+        
+      
+      </ul>
+    </div>
+  </div>
+</nav>
+
+      <div class="container">
+        <div class="blog-post">
+          <h3>
+            <strong><a href="../../project/project1/">Project1</a></strong>
+          </h3>
+        </div>
+ 
+<div class="blog-title">
+          <h4>
+         January 1, 0001 
+            &nbsp;&nbsp;
+            
+          </h4>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="blogpost">
+              
+
+
+<pre class="r"><code>## paste this chunk into the ```{r setup} chunk at the top of your project 1 .Rmd file
+
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, fig.align = &quot;center&quot;, warning = F, message = F,
+tidy=TRUE, tidy.opts=list(width.cutoff=60), R.options=list(max.print=100))</code></pre>
+<p><font size="5"><em>Introduction</em></font></p>
+<p><span class="math inline">\(~\)</span></p>
+<p>All three datasets used in this project provide data on all the Texas counties. CountyArea.csv provides the land, water, and total area in miles^2 for each Texas county. I chose this dataset because I have always thought the way counties in Texas were shaped and sized were quite arbitrary, and I thought it would be interesting to learn more about the size of Texas counties. CountyElevation.csv has the elevation in feet of each county in Texas. I found this dataset interesting because I tend to think of Texas as quite a level state, though I know that is not actually true. With the rising sea levels due to global warming, I think it is valuable to better understand what our state will look like. Both these datasets were obtained from <a href="http://www.texascounties.net/statistics/totalarea.htm" class="uri">http://www.texascounties.net/statistics/totalarea.htm</a> and <a href="http://www.texascounties.net/statistics/elevation.htm" class="uri">http://www.texascounties.net/statistics/elevation.htm</a>, respectively. The third dataset includes the vaccination rates for the mandatory vaccinations of Texas seventh graders by county in 2019. I chose this dataset because I am very interested in vaccines overall, especially vaccine hesitancy. This data was obtained from the Texas DSHS website, <a href="https://www.dshs.texas.gov/immunize/coverage/schools/" class="uri">https://www.dshs.texas.gov/immunize/coverage/schools/</a>. Overall, I don’t expect a ton of associations between these datasets as while they share an ID variable, they were sort of chosen at random. However, I would not be surprised if counties with higher elevation also had lower vaccination rates, as higher elevation counties are more rural, and thus have less access to healthcare. I would also expect that the counties with lower elevation will also have higher water areas.</p>
+<p><span class="math inline">\(~\)</span></p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>## ✓ ggplot2 3.3.3     ✓ purrr   0.3.4
+## ✓ tibble  3.0.4     ✓ dplyr   1.0.2
+## ✓ tidyr   1.1.2     ✓ stringr 1.4.0
+## ✓ readr   1.4.0     ✓ forcats 0.5.0</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(dplyr)
+cArea &lt;- read.csv(&quot;CountyArea.csv&quot;)
+cVax &lt;- read.csv(&quot;VaxCounty.csv&quot;)
+cElev &lt;- read.csv(&quot;CountyElevation.csv&quot;)</code></pre>
+<p>Here the files are being read in. cArea is the dataset with the areas cVax has the the vaccination rates, and cElev has the elevations</p>
+<p><span class="math inline">\(~\)</span></p>
+<p><font size="4"><em>Tidying</em></font></p>
+<pre class="r"><code>cVax$County &lt;- toupper(cVax$County)
+cArea$Name &lt;- toupper(cArea$Name)
+cElev$Name &lt;- toupper(cElev$Name)
+cVax &lt;- cVax %&gt;% pivot_longer(cols = c(Tdap.Td,Meningococcal,Hepatitis.A,Hepatitis.B,MMR, Polio, Varicella), names_to = &quot;Vaccines&quot;,values_to = &quot;Vaccination rates&quot;)
+cArea &lt;- cArea %&gt;% rename(Total = Total.Area..mi2., Land = Land.Area..mi2., Water = Water.Area..mi2.)
+cArea &lt;- cArea %&gt;% pivot_longer(cols = c(Total, Land, Water), names_to = &quot;Area.type&quot;, values_to = &quot;Area.miles&quot;) </code></pre>
+<p><span class="math inline">\(~\)</span></p>
+<p>In this section, pivot_longer was used on cVax to make a column with all the vaccinations and a separate columen with the corresponding vaccination rates. cArea was elongated so all the types of area measurements were in one column, and the measures were in their own separate column.</p>
+<p><span class="math inline">\(~\)</span></p>
+<p><font size="4"><em>Joining</em></font></p>
+<pre class="r"><code>areaVax &lt;- cArea %&gt;% inner_join(cVax, by = c(&quot;Name&quot; = &quot;County&quot;))
+areaVax &lt;- areaVax %&gt;% inner_join(cElev, by = c(&quot;Name&quot; = &quot;Name&quot;))
+areaVax &lt;- areaVax %&gt;% rename(Rank.area = Rank.x, Rank.elevation = Rank.y)
+glimpse(areaVax)</code></pre>
+<pre><code>## Rows: 5,334
+## Columns: 8
+## $ Rank.area           &lt;fct&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…
+## $ Name                &lt;chr&gt; &quot;BREWSTER&quot;, &quot;BREWSTER&quot;, &quot;BREWSTER&quot;, &quot;BREWSTER&quot;, &quot;…
+## $ Area.type           &lt;chr&gt; &quot;Total&quot;, &quot;Total&quot;, &quot;Total&quot;, &quot;Total&quot;, &quot;Total&quot;, &quot;Tot…
+## $ Area.miles          &lt;fct&gt; &quot;6,192.30&quot;, &quot;6,192.30&quot;, &quot;6,192.30&quot;, &quot;6,192.30&quot;, &quot;…
+## $ Vaccines            &lt;chr&gt; &quot;Tdap.Td&quot;, &quot;Meningococcal&quot;, &quot;Hepatitis.A&quot;, &quot;Hepat…
+## $ `Vaccination rates` &lt;fct&gt; 98.00%, 97.00%, 96.00%, 100.00%, 100.00%, 100.00%…
+## $ Rank.elevation      &lt;fct&gt; 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4…
+## $ Elevation           &lt;fct&gt; &quot;4,475&quot;, &quot;4,475&quot;, &quot;4,475&quot;, &quot;4,475&quot;, &quot;4,475&quot;, &quot;4,4…</code></pre>
+<p><span class="math inline">\(~\)</span></p>
+<p>Because the datasets all had at least one additional row containing different statistics (totals or averages), an inner join was performed. In the join, one row was lost from cArea and cVax, just containing the total values, and two rows were lost from cElev, one containing average values, and an extra row due to weird formatting of the column names. Two rows containing the ranks for the elevations and areas of the counties were renamed to make it more clear which one was which.</p>
+<p><span class="math inline">\(~\)</span></p>
+<pre class="r"><code>areaVax &lt;- areaVax %&gt;% mutate(Rank.area = as.numeric(gsub(&quot;,&quot;, &quot;&quot;, Rank.area)), .keep = &quot;unused&quot;)
+areaVax &lt;- areaVax %&gt;% mutate(Rank.elevation = as.numeric(gsub(&quot;,&quot;, &quot;&quot;, Rank.elevation)), .keep = &quot;unused&quot;)
+areaVax &lt;- areaVax %&gt;% mutate(Elevation = as.numeric(gsub(&quot;,&quot;, &quot;&quot;, Elevation)), .keep = &quot;unused&quot;) %&gt;% mutate(Elevation.m = Elevation*0.3048)
+areaVax &lt;- areaVax %&gt;% mutate(Area.miles = as.numeric(gsub(&quot;,&quot;, &quot;&quot;, Area.miles)), .keep = &quot;unused&quot;) %&gt;% mutate(Area.km = Area.miles*2.58999)
+areaVax &lt;- areaVax %&gt;% mutate(Percent.vaccinated = as.numeric(gsub(&quot;%&quot;, &quot;&quot;, `Vaccination rates`)), .keep = &quot;unused&quot;)</code></pre>
+<pre><code>## Warning: Problem with `mutate()` input `Percent.vaccinated`.
+## ℹ NAs introduced by coercion
+## ℹ Input `Percent.vaccinated` is `as.numeric(gsub(&quot;%&quot;, &quot;&quot;, `Vaccination rates`))`.</code></pre>
+<pre><code>## Warning in mask$eval_all_mutate(dots[[i]]): NAs introduced by coercion</code></pre>
+<p>NAs are introduced by coercion as there are some values with “NR” in the the Vaccination rates column as they were not able to get data.</p>
+<p><span class="math inline">\(~\)</span></p>
+<p><font size="4"><em>Summarizing</em></font></p>
+<pre class="r"><code>numberCounties &lt;- areaVax %&gt;% summarize(n_distinct(Name))
+numberCounties</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   `n_distinct(Name)`
+##                &lt;int&gt;
+## 1                254</code></pre>
+<p>This table shows the number of unique values in the name column, which contains the county names. It contains 254 counties, the total number of counties in the state of Texas.</p>
+<p><span class="math inline">\(~\)</span></p>
+<pre class="r"><code>maxAreas &lt;- areaVax %&gt;% group_by(Name) %&gt;% summarize(totalArea = max(Area.miles), elevationRank = max(Rank.elevation)) %&gt;% arrange(-totalArea)</code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre class="r"><code>maxAreas</code></pre>
+<pre><code>## # A tibble: 254 x 3
+##    Name      totalArea elevationRank
+##    &lt;chr&gt;         &lt;dbl&gt;         &lt;dbl&gt;
+##  1 BREWSTER      6192.             4
+##  2 PECOS         4765.            38
+##  3 HUDSPETH      4572.             3
+##  4 PRESIDIO      3856.             2
+##  5 CULBERSON     3813              6
+##  6 WEBB          3376.           176
+##  7 VAL VERDE     3233.           124
+##  8 CROCKETT      2807.            64
+##  9 REEVES        2642.            52
+## 10 TERRELL       2358.            42
+## # … with 244 more rows</code></pre>
+<p>This shows the max area by county, giving the total area for each county, which is then arranged in descending order by the area. The elevation rank is also included.</p>
+<p><span class="math inline">\(~\)</span></p>
+<pre class="r"><code>areaVax %&gt;% filter(Area.type == &quot;Water&quot;) %&gt;% summarise(cor(Area.miles, Elevation, use = &quot;pair&quot;))</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   `cor(Area.miles, Elevation, use = &quot;pair&quot;)`
+##                                        &lt;dbl&gt;
+## 1                                     -0.316</code></pre>
+<p>This shows the correlation between area and elevation.</p>
+<p><span class="math inline">\(~\)</span></p>
+<pre class="r"><code>meanVax &lt;- areaVax %&gt;% group_by(Vaccines) %&gt;% summarize(MeanPercent = mean(na.omit(Percent.vaccinated))) %&gt;% arrange(MeanPercent)</code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre class="r"><code>meanVax</code></pre>
+<pre><code>## # A tibble: 7 x 2
+##   Vaccines      MeanPercent
+##   &lt;chr&gt;               &lt;dbl&gt;
+## 1 Meningococcal        97.2
+## 2 Tdap.Td              97.3
+## 3 Varicella            97.9
+## 4 Hepatitis.A          98.5
+## 5 Polio                98.7
+## 6 Hepatitis.B          98.8
+## 7 MMR                  98.8</code></pre>
+<p>This shows the average percent of seventh graders with each vaccine.</p>
+<p><span class="math inline">\(~\)</span></p>
+<pre class="r"><code>areaVax %&gt;% summarise(max(Rank.elevation), max(Rank.area))</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   `max(Rank.elevation)` `max(Rank.area)`
+##                   &lt;dbl&gt;            &lt;dbl&gt;
+## 1                   254              254</code></pre>
+<p>This shows the maximum values for the area and elevation ranks.</p>
+<p><span class="math inline">\(~\)</span></p>
+<pre class="r"><code>areaVax %&gt;% group_by(Name) %&gt;% summarize(VaccinationRate = mean(Percent.vaccinated), max(Rank.area)) %&gt;% arrange(VaccinationRate)</code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre><code>## # A tibble: 254 x 3
+##    Name       VaccinationRate `max(Rank.area)`
+##    &lt;chr&gt;                &lt;dbl&gt;            &lt;dbl&gt;
+##  1 COKE                  87.7              116
+##  2 KING                  87.8              141
+##  3 GAINES                89.4               22
+##  4 SHERMAN               90.6              121
+##  5 LIPSCOMB              91.1              111
+##  6 HALL                  93.6              153
+##  7 MONTAGUE              94.1              105
+##  8 JACK                  94.1              129
+##  9 GILLESPIE             94.1               67
+## 10 JEFF DAVIS            94.4               11
+## # … with 244 more rows</code></pre>
+<p><span class="math inline">\(~\)</span></p>
+<p>Overall, I did not find anything extremely surprising with the summary statistics. Using n_distinct to summarize the Name column was valuable as it allowed me to confirm that no counties were lost in the process of joining the data sets. The next table shows the total area of each county as well as the elevation rank, but does not reveal much. Then, there is a table with the correlation between elevation and the water area of each county. Though not surprising, it did demonstrate a slightly stronger correlation than just the correlation between total area and elevation. There was very little difference in the mean percent vaccinated between the different vaccine types. I found this a little surprising because a lot of anti-vaccine propaganda will attack only one specific vaccine or ingredient, so I had expected there to be a little more discrepancy between the vaccines. The penultimate table shows the maximum values for the area and elevation ranks, which showed that both of them had 254 values, meaning that there were no “ties”. The last table includes the mean vaccination rates by county as well as the area rank.</p>
+<p><span class="math inline">\(~\)</span></p>
+<p><font size="4"><em>Visualizing</em></font></p>
+<p><span class="math inline">\(~\)</span></p>
+<p><em>Heatmap</em></p>
+<pre class="r"><code>corm &lt;- areaVax %&gt;% select_if(is.numeric) %&gt;% na.omit() %&gt;% cor() %&gt;% as.data.frame %&gt;% rownames_to_column %&gt;% pivot_longer(-1)
+
+corm %&gt;% ggplot(aes(rowname, name, fill = value)) + geom_tile() + geom_text(aes(label = round(value,2))) + xlab(&quot;&quot;) + ylab(&quot;&quot;) + coord_fixed() + theme(axis.text.x = element_text(angle = 60, hjust = 1)) + ggtitle(&quot;Correlation Heat Map&quot;)</code></pre>
+<p><img src="../../project/project1_files/figure-html/unnamed-chunk-12-1.png" width="672" />
+<span class="math inline">\(~\)</span></p>
+<p>This plot is a heatmap demonstrating the correlation between all the numeric variables in the dataset. Since some of the variables are just conversions of other variables (Area.miles and Area.km, Elevation and Elevation.m), they have correlations of 1. There was also a strong negative correlation between the elevation variables and the elevation rank, which makes sense since the rank is based off the elevation. The correlation between the area variables and the area rank was surprisingly low, with a value of only -0.39. After that, the next strongest correlation, though still weak, was between area and elevation, with a correlation of 0.21, and a correlation between the ranks of 0.18. There was an extremely weak negative correlation between the percent of people vaccinated and the elevation.</p>
+<p><span class="math inline">\(~\)</span></p>
+<p>Area and Elevation</p>
+<pre class="r"><code>ggplot(data = areaVax, aes(x = Elevation, y = Area.miles, color = Area.type)) + geom_smooth(method=&quot;lm&quot;) +
+geom_point(size = 1) + ggtitle(&quot;Elevation by Area&quot;) + ylab(&quot;Area (miles)&quot;) + theme_dark()</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="../../project/project1_files/figure-html/unnamed-chunk-13-1.png" width="672" />
+<span class="math inline">\(~\)</span></p>
+<p>This plot demonstrates the slight positive correlation between total and land area and elevation. The correlation between land and total areas and elevation is quite weak. The correlation between water area and elevation is not as evident based on this graph, though it is a bit stronger. This correlation is likey due to the fact that the parts of texas with lower elevation tend to be a little more wet.</p>
+<p><span class="math inline">\(~\)</span></p>
+<pre class="r"><code>g &lt;- ggplot(areaVax, aes(x=Vaccines, y=Percent.vaccinated))+geom_bar(stat = &quot;summary&quot;,fun=mean, color = &quot;light blue&quot;, fill = &quot;light blue&quot;) +
+  geom_errorbar(stat=&quot;summary&quot;, fun.data=mean_se) + ylab(&quot;Percent vaccinated&quot;) + xlab(&quot;Vaccine type&quot;) + ggtitle(&quot;Vaccination rate by Vaccine&quot;) + theme_minimal() + scale_y_continuous(breaks = c(10,20,30,40,50,60,70,80,90,100))
+g</code></pre>
+<pre><code>## Warning: Removed 105 rows containing non-finite values (stat_summary).
+
+## Warning: Removed 105 rows containing non-finite values (stat_summary).</code></pre>
+<p><img src="../../project/project1_files/figure-html/unnamed-chunk-14-1.png" width="672" />
+<span class="math inline">\(~\)</span></p>
+<p>This plot demonstrates how similar the vaccination rates are across all the different types of vaccines. Even with errorbars, there is very little variation in across the different vaccine types. The vaccine with the lowest average rate is the Meningococcal vaccine. This surprised me because the Menigococcal vaccine is required for entrance into Texas colleges and universities.</p>
+<p><span class="math inline">\(~\)</span></p>
+<p><font size="4"><em>Clustering</em></font></p>
+<p><span class="math inline">\(~\)</span></p>
+<p><em>Cluster data</em></p>
+<pre class="r"><code>clust_dat &lt;- areaVax %&gt;% select(Area.miles, Elevation, Percent.vaccinated) %&gt;% na.omit()</code></pre>
+<p><span class="math inline">\(~\)</span></p>
+<p><em>Choosing number of clusters</em></p>
+<pre class="r"><code>library(cluster)
+sil_width&lt;-vector() 
+for(i in 2:10){  
+  kms &lt;- kmeans(clust_dat,centers=i) #compute k-means
+  sil &lt;- silhouette(kms$cluster,dist(clust_dat)) #get sil widths
+  sil_width[i]&lt;-mean(sil[,3]) 
+}
+ggplot()+geom_line(aes(x=1:10,y=sil_width))+scale_x_continuous(name=&quot;k&quot;,breaks=1:10) #plots sil widths</code></pre>
+<pre><code>## Warning: Removed 1 row(s) containing missing values (geom_path).</code></pre>
+<p><img src="../../project/project1_files/figure-html/unnamed-chunk-16-1.png" width="672" />
+<span class="math inline">\(~\)</span></p>
+<p>This charts the silhouette width for various values of k. A larger silhouette width indicates more cohesive clusters. It is better than using just the WSS because it also takes into account the distance between clusters. This graph shows that k=2 results in the highest silhouette width.</p>
+<p><span class="math inline">\(~\)</span></p>
+<p><em>Cluster Analysis</em></p>
+<pre class="r"><code>pam1&lt;-clust_dat %&gt;% scale() %&gt;% pam(k=2) #computes the PAM clusters using k=2, scaled to account for difference in the scales of the variables.
+pam1</code></pre>
+<pre><code>## Medoids:
+##        ID  Area.miles  Elevation Percent.vaccinated
+## [1,] 3980  0.19203030  1.2026219          0.1973221
+## [2,] 4610 -0.07949327 -0.7797534          0.1408397
+## Clustering vector:
+##    [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+##   [38] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+##   [75] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2
+##  [112] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1
+##  [149] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+##  [186] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+##  [223] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2
+##  [260] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+##  [297] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+##  [334] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+##  [371] 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+##  [408] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+##  [445] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+##  [482] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+##  [519] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2
+##  [556] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+##  [593] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+##  [630] 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+##  [667] 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+##  [704] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1
+##  [741] 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+##  [778] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+##  [815] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+##  [852] 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2
+##  [889] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+##  [926] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+##  [963] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [1000] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [1037] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2
+## [1074] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [1111] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [1148] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [1185] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [1222] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [1259] 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [1296] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1
+## [1333] 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [1370] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2
+## [1407] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [1444] 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2
+## [1481] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [1518] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [1555] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [1592] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2
+## [1629] 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 1 1 1 1 1 1
+## [1666] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2
+## [1703] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [1740] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [1777] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [1814] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [1851] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [1888] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [1925] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [1962] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [1999] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [2036] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [2073] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [2110] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1
+## [2147] 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [2184] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [2221] 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [2258] 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [2295] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [2332] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2
+## [2369] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1
+## [2406] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [2443] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2
+## [2480] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [2517] 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [2554] 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1
+## [2591] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1
+## [2628] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2
+## [2665] 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [2702] 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1
+## [2739] 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [2776] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [2813] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [2850] 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 2 1 1 1 1 1 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [2887] 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1
+## [2924] 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [2961] 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [2998] 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [3035] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [3072] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [3109] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [3146] 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1
+## [3183] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [3220] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [3257] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [3294] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [3331] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 1 1 1 1 1 1 1
+## [3368] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1
+## [3405] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [3442] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [3479] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [3516] 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2
+## [3553] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [3590] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [3627] 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2
+## [3664] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [3701] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [3738] 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [3775] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [3812] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [3849] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [3886] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [3923] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [3960] 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2
+## [3997] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2
+## [4034] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [4071] 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [4108] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [4145] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [4182] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [4219] 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [4256] 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2
+## [4293] 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2
+## [4330] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [4367] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [4404] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [4441] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1
+## [4478] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [4515] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [4552] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [4589] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [4626] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [4663] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [4700] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [4737] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [4774] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [4811] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [4848] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [4885] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [4922] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [4959] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [4996] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [5033] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [5070] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [5107] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [5144] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [5181] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [5218] 2 2 2 2 2 2 2 2 2 2 2 2
+## Objective function:
+##    build     swap 
+## 1.118375 1.066745 
+## 
+## Available components:
+##  [1] &quot;medoids&quot;    &quot;id.med&quot;     &quot;clustering&quot; &quot;objective&quot;  &quot;isolation&quot; 
+##  [6] &quot;clusinfo&quot;   &quot;silinfo&quot;    &quot;diss&quot;       &quot;call&quot;       &quot;data&quot;</code></pre>
+<p>This step provides you with the middle most point in the clusters.</p>
+<p><span class="math inline">\(~\)</span></p>
+<p><em>Visualize Clusters</em></p>
+<pre class="r"><code>final &lt;- areaVax %&gt;% na.omit() %&gt;% select(-Name) %&gt;% mutate(cluster = as.factor(pam1$clustering))
+library(GGally)</code></pre>
+<pre><code>## Registered S3 method overwritten by &#39;GGally&#39;:
+##   method from   
+##   +.gg   ggplot2</code></pre>
+<pre class="r"><code>ggpairs(final, columns=1:4, aes(shape=cluster))</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="../../project/project1_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><span class="math inline">\(~\)</span></p>
+<p><em>Interpret Clusters</em></p>
+<pre class="r"><code>ggplot(final, aes(x=Area.miles,y=Elevation, color=cluster))+geom_point()</code></pre>
+<p><img src="../../project/project1_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p><span class="math inline">\(~\)</span></p>
+<p><em>Goodness of Fit</em></p>
+<pre class="r"><code>pam1$silinfo$avg.width</code></pre>
+<pre><code>## [1] 0.4000714</code></pre>
+<p>The average silhouette width is 0.40</p>
+<p><span class="math inline">\(~\)</span></p>
+<p><em>Clustering conclusions</em>
+While clustering is fun overall, the clustering of this data provided little insight. Beginning with choosing the number of clusters with k-means, the highest silhouette width acheived was only a little more than 0.5. The average silhouette width acheived through PAM was 0.40, making the clustering weak and likely artifical. Not much can really be learned through this clustering. If I were to do clustering on this data again, I would try to add a larger area variable, like region, which would allow for better testing of the clustering. I also think that including water area was not helpful as it included many extreme values (zeroes). Cluster two was much more closely clustered, especially in comparison to cluster one, which is almost definitely artificial since it is so spread out.</p>
+
+            
+        <hr>         <div class="related-posts">
+                <h5>Related Posts</h5>
+                
+              </div> 
+            </div>
+          </div>
+
+   <hr>  <div class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div> 
+        </div>
+      </div>
+    </div>
+
+    
+    <footer>
+  <div id="footer">
+    <div class="container">
+      <p class="text-muted">&copy; All rights reserved. Powered by <a href="https://gohugo.io/">Hugo</a> and
+      <a href="http://www.github.com/nurlansu/hugo-sustain/">sustain</a> with ♥</p>
+    </div>
+  </div>
+</footer>
+<div class="footer"></div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="../../js/docs.min.js"></script>
+<script src="../../js/main.js"></script>
+
+<script src="../../js/ie10-viewport-bug-workaround.js"></script>
+
+
+    
+  </body>
+</html>

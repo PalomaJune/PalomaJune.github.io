@@ -6,7 +6,20 @@
     <description>Recent content on Paloma June</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Thu, 23 Jul 2015 21:13:14 -0500</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 08 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hey!</title>
+      <link>/post/2021/05/08/hey/</link>
+      <pubDate>Sat, 08 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2021/05/08/hey/</guid>
+      <description>All of this is quite neat, I’m having a lot of fun!
+I’ve taken a couple classes in Python, and I’ve taken a couple of classes in R, but I didn’t know you could get them to work together!
+Here is some code in R:
+library(reticulate) this &amp;lt;- &amp;quot;We can&amp;quot; Here is some code in Python:
+that = &amp;quot;print stuff like this&amp;quot; print(r.this,that) ## We can print stuff like this How neat is that!</description>
+    </item>
+    
     <item>
       <title>Hello R Markdown</title>
       <link>/post/2015/07/23/hello-r-markdown/</link>

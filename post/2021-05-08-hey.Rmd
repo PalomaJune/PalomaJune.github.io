@@ -1,0 +1,36 @@
+---
+title: Hey!
+author: ''
+date: '2021-05-08'
+slug: hey
+categories: []
+tags: []
+description: ''
+---
+
+All of this is quite neat, I'm having a lot of fun!
+
+I've taken a couple classes in Python, and I've taken a couple of classes in R, but I didn't know you could get them to work together!
+
+
+Here is some code in R:
+```{r}
+library(reticulate)
+this <- "We can"
+```
+
+
+Here is some code in Python:
+```{python}
+that = "print stuff like this"
+print(r.this,that)
+```
+How neat is that!
+I love that we can do stuff like this!
+
+Here's the image I always use as finals inspo. I don't know why it works, but telling Baby Yoda you are going to work hard is great inspiration to actually work hard!
+![Baby Yoda (Grogu) from the Mandalorian surrounded by hearts and text reading "Do it for him"](/post/2021-05-08-hey_files/grogu.jfif)
+
+[Link to project 1](/project/project1/)
+
+[Link to google](https://www.google.com)
